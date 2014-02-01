@@ -9,7 +9,6 @@ all:
 install:
 	install -d -m 0755 $(GIT_PATH)
 	install -m 0755 git-publish $(GIT_PATH)
-	chmod 644 $(GIT_PATH)
 
 uninstall:
 	rm $(GIT_PATH)/git-publish
