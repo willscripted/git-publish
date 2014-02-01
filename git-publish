@@ -117,6 +117,7 @@ case "$1" in
     touch $config_file
 
     # Write out .gitpublish
+    echo "# Config options found at https://github.com/will-ob/git-publish" >> $config_file
     if [ $export_dir ]; then echo "writing"; echo "export_dir=$export_dir" >> $config_file; fi
     if [ $branch     ]; then echo "writing"; echo "branch=$branch"         >> $config_file; fi
     if [ $build_cmd  ]; then echo "writing"; echo "build_cmd=$build_cmd"   >> $config_file; fi
