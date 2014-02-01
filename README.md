@@ -10,7 +10,7 @@ Getting Started
 
 #### Install
 ```bash
-git clone this && cd this && make install
+git clone git@github.com:will-ob/git-publish.git && cd git-publish && sudo make install
 git publish init # create .gitpublish
 ```
 
@@ -23,10 +23,17 @@ Options
 -----------
 
 ```bash
-BUILD_COMMAND=
-EXPORT_DIR=
-REMOTE_REF='origin'
-REMOTE_BRANCH='gh-pages'
+# Command to build web dir
+build_cmd=$(herp derp) # no command by default
+
+# Root of web directory
+export_dir=docs/ # default: ./
+
+# Remote repository to push to
+remote=origin
+
+# Branch of remote to push to
+branch=gh-pages
 ```
 
 License
