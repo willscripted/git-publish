@@ -1,51 +1,129 @@
 #!/usr/bin/env bash
 
-# directory of this script
-DIR="$( cd "$( dirname "$0" )" && pwd )"
-echo "$DIR"
-cd $DIR/../
+# TODO Confirm override if .gitpublish already exists
 
-# build
-grunt build || { echo 'Build failed'; exit 1; }
+config_file="$(git rev-parse --show-toplevel)"/.gitpublish
 
-# checkout new branch
-WORKING_BRANCH="$(git rev-parse --abbrev-ref HEAD)"
+case "$1" in
+  "")
+    # Exit if .gitignore does not exist
+    if [ ! -f $config_file ];
+    then
+      echo ".gitignore does not exist."
+      echo "create one with 'git publish init'"
+      exit 1
+    fi;
 
-# if there is unsaved work, stash it
-test -n "$(git status --porcelain)" && $(git stash save --include-untracked) && stashed=true
 
-git checkout --orphan build
+    source $config_file
 
-# add all files in the dist dir to branch at root level
-FILES="$(ls dist)"
+    # Defaults
+    : ${remote:='origin'}
+    : ${branch:='gh-pages'}
+    : ${export_dir:='./'}
 
-mv dist/* ./ -b
+    # directory of this script
+    DIR="$( cd "$( dirname "$0" )" && pwd )"
+    echo "$DIR"
+    cd $DIR/../
 
-git rm -rf .
-for file in $FILES; do
-  git add "$file" -f
-  echo "$file"
-  if [ -e "$file~" ]; then
-    if [ -d "$file" ]; then
-      rm -rf "$file"
-    else
-      rm "$file"
+    # build
+    `$build_cmd` || { echo 'Build failed'; exit 1; }
+
+    # checkout new branch
+    WORKING_BRANCH="$(git rev-parse --abbrev-ref HEAD)"
+
+    # if there is unsaved work, stash it
+    test -n "$(git status --porcelain)" && $(git stash save --include-untracked) && stashed=true
+
+    git checkout --orphan build
+
+    # add all files in the dist dir to branch at root level
+    FILES="$(ls dist)"
+
+    mv $export_dir/* ./ -b
+
+    git rm -rf .
+    for file in $FILES; do
+      git add "$file" -f
+      echo "$file"
+      if [ -e "$file~" ]; then
+        if [ -d "$file" ]; then
+          rm -rf "$file"
+        else
+          rm "$file"
+        fi
+        mv "$file~" "$file"
+      fi
+    done
+
+    git commit -m "Built $(date) : $(git log | head -1)"
+
+    # push to gh-pages
+    git push $remote build:$branch -f
+
+    # return to working branch
+    git reset --hard $WORKING_BRANCH
+    git checkout $WORKING_BRANCH
+
+    # if there wast unsaved work, restore it
+    if $stashed; then git stash pop; fi
+
+    git branch -D build
+
+
+    exit 0
+  ;;
+  "init")
+    if [ -f $config_file ];
+    then
+      echo "A .gitignore file already exists for this directory."
+      read -p "Are you sure you want to overwrite it?" -n 1 -r
+      echo    # (optional) move to a new line
+      if [[ ! $REPLY =~ ^[Yy]$ ]];
+      then
+        echo 'config aborted'
+        exit
+      fi
     fi
-    mv "$file~" "$file"
-  fi
-done
 
-git commit -m "Built $(date) : $(git log | head -1)"
+    # build_cmd
+    echo 'Build command [default ""]:'
+    read build_cmd
 
-# push to gh-pages
-git push origin build:gh-pages -f
+    echo '$build_cmd' $build_cmd
 
-# return to working branch
-git reset --hard $WORKING_BRANCH
-git checkout $WORKING_BRANCH
+    # export_dir
+    echo 'What folder contains your docs? [default: "./"]'
+    read export_dir
 
-# if there wast unsaved work, restore it
-if $stashed; then git stash pop; fi
+    echo '$export_dir' $export_dir
 
-git branch -D build
+    # remote
+    echo 'Which remote do you want to use? [default: "origin"]'
+    echo "$(git remote)"
+    read remote
+
+    echo '$remote' $remote
+
+    # branch
+    echo 'What branch do you want to push your docs to? [default: "gh-pages"]'
+    read branch
+
+    echo '$branch' $branch
+    echo '$export_dir' $export_dir
+    echo '$build_cmd' $build_cmd
+    echo '$remote' $remote
+
+    if [ -f $config_file ]; then rm $config_file; fi
+    touch $config_file
+
+    # Write out .gitpublish
+    if [ $export_dir ]; then echo "writing"; echo "export_dir=$export_dir" >> $config_file; fi
+    if [ $branch     ]; then echo "writing"; echo "branch=$branch"         >> $config_file; fi
+    if [ $build_cmd  ]; then echo "writing"; echo "build_cmd=$build_cmd"   >> $config_file; fi
+    if [ $remote     ]; then echo "writing"; echo "remote=$remote"         >> $config_file; fi
+    exit 0
+  ;;
+esac
 
