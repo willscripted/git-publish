@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# TODO Confirm override if .gitpublish already exists
-
 config_file="$(git rev-parse --show-toplevel)"/.gitpublish
 
 case "$1" in
