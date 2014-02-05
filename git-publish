@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
-config_file="$(git rev-parse --show-toplevel)"/.gitpublish
+repo_root="$(git rev-parse --show-toplevel)"
+config_file=$repo_root/.gitpublish
 
 case "$1" in
   "")
@@ -12,7 +13,6 @@ case "$1" in
       exit 1
     fi;
 
-
     source $config_file
 
     # Defaults
@@ -20,13 +20,8 @@ case "$1" in
     : ${branch:='gh-pages'}
     : ${export_dir:='./'}
 
-    # directory of this script
-    DIR="$( cd "$( dirname "$0" )" && pwd )"
-    echo "$DIR"
-    cd $DIR/../
-
     # build
-    `$build_cmd` || { echo 'Build failed'; exit 1; }
+    $build_cmd || { echo 'Build failed'; exit 1; }
 
     # checkout new branch
     WORKING_BRANCH="$(git rev-parse --abbrev-ref HEAD)"
@@ -37,7 +32,7 @@ case "$1" in
     git checkout --orphan build
 
     # add all files in the dist dir to branch at root level
-    FILES="$(ls dist)"
+    FILES="$(ls $export_dir)"
 
     mv $export_dir/* ./ -b
 
@@ -89,20 +84,14 @@ case "$1" in
     echo 'Build command [default ""]:'
     read build_cmd
 
-    echo '$build_cmd' $build_cmd
-
     # export_dir
     echo 'What folder contains your docs? [default: "./"]'
     read export_dir
-
-    echo '$export_dir' $export_dir
 
     # remote
     echo 'Which remote do you want to use? [default: "origin"]'
     echo "$(git remote)"
     read remote
-
-    echo '$remote' $remote
 
     # branch
     echo 'What branch do you want to push your docs to? [default: "gh-pages"]'
@@ -110,18 +99,18 @@ case "$1" in
 
     echo '$branch' $branch
     echo '$export_dir' $export_dir
-    echo '$build_cmd' $build_cmd
+    echo '$build_cmd' "$build_cmd"
     echo '$remote' $remote
 
     if [ -f $config_file ]; then rm $config_file; fi
     touch $config_file
 
     # Write out .gitpublish
-    echo "# Config options found at https://github.com/will-ob/git-publish" >> $config_file
-    if [ $export_dir ]; then echo "writing"; echo "export_dir=$export_dir" >> $config_file; fi
-    if [ $branch     ]; then echo "writing"; echo "branch=$branch"         >> $config_file; fi
-    if [ $build_cmd  ]; then echo "writing"; echo "build_cmd=$build_cmd"   >> $config_file; fi
-    if [ $remote     ]; then echo "writing"; echo "remote=$remote"         >> $config_file; fi
+    echo "# Config options found at https://github.com/will-ob/git-publish"    >> $config_file
+    if [ "$export_dir" ]; then echo "writing"; echo "export_dir=$export_dir"   >> $config_file; fi
+    if [ "$branch"     ]; then echo "writing"; echo "branch=$branch"           >> $config_file; fi
+    if [ "$build_cmd"  ]; then echo "writing"; echo "build_cmd=\"$build_cmd\"" >> $config_file; fi
+    if [ "$remote"     ]; then echo "writing"; echo "remote=$remote"           >> $config_file; fi
     exit 0
   ;;
 esac
