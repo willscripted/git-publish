@@ -26,10 +26,11 @@ Options
 
 ```bash
 # Command to build web dir
-build_cmd=$(herp derp) # no command by default
+build_cmd="herp derp" # no command by default
 
-# Relative path of web directory
-export_dir=docs/ # default: ./
+# Folder to upload
+# (html/images/css, not source files)
+export_dir=build/ # default: ./
 
 # Remote repository to push to
 remote=origin
