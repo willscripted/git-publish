@@ -1,0 +1,3 @@
+# Config options found at https://github.com/will-ob/git-publish
+export_dir=docs
+build_cmd="make clean build-all"

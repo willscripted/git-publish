@@ -12,3 +12,30 @@ install:
 
 uninstall:
 	rm $(GIT_PATH)/git-publish
+
+
+## Build Site Workflow
+
+clean:
+	rm -rf build
+
+build-all: index.html cname fonts
+
+build:
+	mkdir build
+
+cname: build
+	cp docs/CNAME build
+
+fonts: build
+	cp -r docs/fontello build
+
+index.html: build
+	if [ -f build/index.html ]; then rm build/index.html; fi
+	touch build/index.html
+	cat docs/header.html >> build/index.html
+	cat README.md | pandoc --from markdown_github --to html >> build/index.html
+	cat docs/footer.html >> build/index.html
+
+.PHONY: all install uninstall build build-all clean
+
