@@ -85,12 +85,12 @@ case "$1" in
     read build_cmd
 
     # export_dir
-    echo 'What folder contains your docs? [default: "./"]'
+    echo 'What folder do you want to upload? [default: "./"]'
+    echo 'This may be different from where the source code is kept!'
     read export_dir
 
     # remote
     echo 'Which remote do you want to use? [default: "origin"]'
-    echo "$(git remote)"
     read remote
 
     # branch
@@ -107,10 +107,10 @@ case "$1" in
 
     # Write out .gitpublish
     echo "# Config options found at https://github.com/will-ob/git-publish"    >> $config_file
-    if [ "$export_dir" ]; then echo "writing"; echo "export_dir=$export_dir"   >> $config_file; fi
-    if [ "$branch"     ]; then echo "writing"; echo "branch=$branch"           >> $config_file; fi
-    if [ "$build_cmd"  ]; then echo "writing"; echo "build_cmd=\"$build_cmd\"" >> $config_file; fi
-    if [ "$remote"     ]; then echo "writing"; echo "remote=$remote"           >> $config_file; fi
+    if [ "$export_dir" ]; then echo "export_dir=$export_dir"   >> $config_file; fi
+    if [ "$branch"     ]; then echo "branch=$branch"           >> $config_file; fi
+    if [ "$build_cmd"  ]; then echo "build_cmd=\"$build_cmd\"" >> $config_file; fi
+    if [ "$remote"     ]; then echo "remote=$remote"           >> $config_file; fi
     exit 0
   ;;
 esac
