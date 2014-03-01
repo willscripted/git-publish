@@ -24,7 +24,7 @@ case "$1" in
     $build_cmd || { echo 'Build failed'; exit 1; }
 
     # checkout new branch
-    WORKING_BRANCH="$(git rev-parse --abbrev-ref HEAD)"
+    working_branch="$(git rev-parse --abbrev-ref HEAD)"
 
     # if there is unsaved work, stash it
     test -n "$(git status --porcelain)" && $(git stash save --include-untracked) && stashed=true
@@ -32,12 +32,12 @@ case "$1" in
     git checkout --orphan build
 
     # add all files in the dist dir to branch at root level
-    FILES="$(ls $export_dir)"
+    files="$(ls $export_dir)"
 
     mv $export_dir/* ./ -b
 
     git rm -rf .
-    for file in $FILES; do
+    for file in $files; do
       git add "$file" -f
       echo "$file"
       if [ -e "$file~" ]; then
@@ -56,8 +56,8 @@ case "$1" in
     git push $remote build:$branch -f
 
     # return to working branch
-    git reset --hard $WORKING_BRANCH
-    git checkout $WORKING_BRANCH
+    git reset --hard $working_branch
+    git checkout $working_branch
 
     # if there wast unsaved work, restore it
     if $stashed; then git stash pop; fi
@@ -72,7 +72,6 @@ case "$1" in
     then
       echo "A .gitignore file already exists for this directory."
       read -p "Are you sure you want to overwrite it?" -n 1 -r
-      echo    # (optional) move to a new line
       if [[ ! $REPLY =~ ^[Yy]$ ]];
       then
         echo 'config aborted'
