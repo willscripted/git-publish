@@ -13,6 +13,7 @@ Getting Started
 git clone git@github.com:will-ob/git-publish.git \
    && cd git-publish \
    && sudo make install
+
 git publish init # create .gitpublish
 ```
 
@@ -25,6 +26,8 @@ Options
 -----------
 
 ```bash
+# .gitpublish
+
 # Command to build web dir
 build_cmd="herp derp" # no command by default
 
