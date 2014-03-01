@@ -15,6 +15,8 @@ case "$1" in
 
     source $config_file
 
+    build_branch="build-$(date +'%N')"
+
     # Defaults
     : ${remote:='origin'}
     : ${branch:='gh-pages'}
@@ -27,9 +29,11 @@ case "$1" in
     working_branch="$(git rev-parse --abbrev-ref HEAD)"
 
     # if there is unsaved work, stash it
-    test -n "$(git status --porcelain)" && $(git stash save --include-untracked) && stashed=true
+    test -n "$(git status --porcelain)" && \
+      git stash save --include-untracked && \
+      stashed=true
 
-    git checkout --orphan build
+    git checkout --orphan $build_branch
 
     # add all files in the dist dir to branch at root level
     files="$(ls $export_dir)"
@@ -52,17 +56,20 @@ case "$1" in
 
     git commit -m "Built $(date) : $(git log | head -1)"
 
-    # push to gh-pages
-    git push $remote build:$branch -f
-
     # return to working branch
-    git reset --hard $working_branch
     git checkout $working_branch
 
     # if there wast unsaved work, restore it
     if $stashed; then git stash pop; fi
 
-    git branch -D build
+    # Note: dont push until working space is restored
+    #  as it can take a while and users may sigint
+    #  before it completes.
+
+    # push to gh-pages
+    git push $remote $build_branch:$branch -f
+
+    git branch -D $build_branch
 
 
     exit 0
@@ -78,6 +85,7 @@ case "$1" in
         exit
       fi
     fi
+
     # build_cmd
     clear
     echo -e "\e[96mBuild command:\e[0m\n"
