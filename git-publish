@@ -27,6 +27,7 @@ case "$1" in
 
     # checkout new branch
     working_branch="$(git rev-parse --abbrev-ref HEAD)"
+    sha=$(git rev-parse HEAD)
 
     # if there is unsaved work, stash it
     test -n "$(git status --porcelain)" && \
@@ -54,7 +55,7 @@ case "$1" in
       fi
     done
 
-    git commit -m "Built $(date) : $(git log | head -1)"
+    git commit -m "Built $(date) : $sha"
 
     # return to working branch
     git checkout $working_branch
