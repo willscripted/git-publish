@@ -8,8 +8,8 @@ case "$1" in
     # Exit if .gitignore does not exist
     if [ ! -f $config_file ];
     then
-      echo ".gitignore does not exist."
-      echo "create one with 'git publish init'"
+      echo "Error: .gitignore does not exist."
+      echo "Create one with 'git publish init'"
       exit 1
     fi;
 
@@ -78,28 +78,38 @@ case "$1" in
         exit
       fi
     fi
-
     # build_cmd
-    echo 'Build command [default ""]:'
+    clear
+    echo -e "\e[96mBuild command:\e[0m\n"
+    echo -e   "  \e[90mDefault: '':\e[0m"
+    echo -e   "  \e[1mExample: grunt build\e[0m"
+    echo -ne  "\n  \e[5m$> \e[25m"
     read build_cmd
 
     # export_dir
-    echo 'What folder do you want to upload? [default: "./"]'
-    echo 'This may be different from where the source code is kept!'
+    clear
+    echo -e "\e[1mUpload folder:\e[0m\n"
+    echo -e   "  The folder that should be set as the root of the uploaded branch.\n"
+    echo -e   "  \e[33mWarning: This may be different from where the source code is kept.\e[0m"
+    echo -e   "  Example: The git-publish build command creates a 'build' directory to upload\e[0m"
+    echo -e   "  \e[2mDefault: ./\e[0m"
+    echo -ne  "\n  \e[5m$> \e[25m"
     read export_dir
 
     # remote
-    echo 'Which remote do you want to use? [default: "origin"]'
+    clear
+    echo -e "\e[1mGit repository:\e[0m\n"
+    echo -e   "  \e[2mDefault: origin\e[0m"
+    echo -e   "  Options: $(git remote | tr '\n' ' ')\e[0m"
+    echo -ne  "\n  \e[5m$> \e[25m"
     read remote
 
     # branch
-    echo 'What branch do you want to push your docs to? [default: "gh-pages"]'
+    clear
+    echo -e "\e[1mGit branch:\e[0m\n"
+    echo -e   "  \e[2mDefault: gh-pages\e[0m"
+    echo -ne  "\n  \e[5m$> \e[25m"
     read branch
-
-    echo '$branch' $branch
-    echo '$export_dir' $export_dir
-    echo '$build_cmd' "$build_cmd"
-    echo '$remote' $remote
 
     if [ -f $config_file ]; then rm $config_file; fi
     touch $config_file
