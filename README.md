@@ -50,6 +50,13 @@ Development
 
 This page uses [pandoc](http://johnmacfarlane.net/pandoc/) and [make](http://unixhelp.ed.ac.uk/CGI/man-cgi?make) to generate its github pages.
 
+Changelog
+------------
+
+### v0.1.0
+
+- Added version number `git publish --version`
+
 
 License
 ----------

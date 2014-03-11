@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+version='0.1.0'
+
 repo_root="$(git rev-parse --show-toplevel)"
 config_file=$repo_root/.gitpublish
 
@@ -73,6 +75,10 @@ case "$1" in
     git branch -D $build_branch
 
 
+    exit 0
+  ;;
+  "--version")
+    echo "git-publish version $version"
     exit 0
   ;;
   "init")
