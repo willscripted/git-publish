@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Git Publish Demo</title>
+    <link rel="stylesheet" href="fontello/css/fontello.css">
+    <!--[if IE 7]>
+    <link rel="stylesheet" href="fontello/css/fontello-ie7.css">
+    <![endif]-->
+    <style>
+.explanatory-gif {
+  display: none;
+}
+
+.container {
+  width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.logo {
+  font-size: 8em;
+  text-align: center;
+}
+
+.logo i {
+  margin-left: -.25em;
+  margin-right: auto;
+}
+
+pre.sourceCode {
+  background-color: #EEE;
+  padding: 2em;
+  border: 2px solid #CCC;
+}
+
+pre.sourceCode .co {
+  opacity: .3;
+}
+
+h1 {
+  text-align: center;
+  margin-top: 0px;
+}
+
+.container > h2:first-of-type {
+  margin-top: 2em;
+}
+
+.container > blockquote:first-of-type {
+  display: none;
+}
+
+.container > p:first-of-type {
+  font-style: italic;
+  text-align: center;
+  opacity: .5;
+}
+
+h1:before {
+  content: "{ ";
+}
+
+h1:after {
+  content: " }";
+}
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="logo"><i class="icon-upload-cloud"></i></div>
+<h1>git-publish</h1>
+<blockquote>
+<p><code>git publish</code></p>
+</blockquote>
+<p>Export docs to github pages.</p>
+<p><img class="explanatory-gif" alt="Publishing with Git" src="https://raw.github.com/will-ob/git-publish/master/docs/animation.gif" style="width: 100%;" /></p>
+<h2>Getting Started</h2>
+<h4>Install</h4>
+<pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">git</span> clone git@github.com:will-ob/git-publish.git \
+   <span class="kw">&amp;&amp;</span> <span class="kw">cd</span> git-publish \
+   <span class="kw">&amp;&amp;</span> <span class="kw">sudo</span> make install
+
+<span class="kw">git</span> publish init <span class="co"># create .gitpublish</span></code></pre>
+<h4>Use</h4>
+<pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">git</span> publish</code></pre>
+<h2>Options</h2>
+<pre class="sourceCode bash"><code class="sourceCode bash"><span class="co"># .gitpublish</span>
+
+<span class="co"># Command to build web dir</span>
+<span class="ot">build_cmd=</span><span class="st">&quot;herp derp&quot;</span> <span class="co"># no command by default</span>
+
+<span class="co"># Folder to upload</span>
+<span class="co"># (html/images/css, not source files)</span>
+<span class="ot">export_dir=</span>build/ <span class="co"># default: ./</span>
+
+<span class="co"># Remote repository to push to</span>
+<span class="ot">remote=</span>origin
+
+<span class="co"># Branch of remote to push to</span>
+<span class="ot">branch=</span>gh-pages</code></pre>
+<h2>Development</h2>
+<p>This page uses <a href="http://johnmacfarlane.net/pandoc/">pandoc</a> and <a href="http://unixhelp.ed.ac.uk/CGI/man-cgi?make">make</a> to generate its github pages.</p>
+<h2>Changelog</h2>
+<h3>v0.1.0</h3>
+<ul>
+<li>Added version number <code>git publish --version</code></li>
+</ul>
+<h2>License</h2>
+<p>The MIT License (MIT)</p>
+<p>Copyright (c) 2014 Will O'Brien</p>
+    </div>
+  </body>
+</html>
