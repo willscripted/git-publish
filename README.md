@@ -5,6 +5,8 @@ git-publish
 
 Export docs to github pages.
 
+<img class="explanatory-gif" alt="Publishing with Git" src="https://raw.github.com/will-ob/git-publish/master/docs/animation.gif" style="width: 100%;" />
+
 Getting Started
 ----------
 

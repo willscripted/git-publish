@@ -19,16 +19,15 @@ uninstall:
 clean:
 	rm -rf build
 
-build-all: index.html cname fonts
+build-all: index.html static
 
 build:
 	mkdir build
 
-cname: build
+static: build
 	cp docs/CNAME build
-
-fonts: build
 	cp -r docs/fontello build
+	cp docs/animation.gif build
 
 index.html: build
 	if [ -f build/index.html ]; then rm build/index.html; fi
