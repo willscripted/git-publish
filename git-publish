@@ -5,10 +5,10 @@ config_file=$repo_root/.gitpublish
 
 case "$1" in
   "")
-    # Exit if .gitignore does not exist
+    # Exit if .gitpublish does not exist
     if [ ! -f $config_file ];
     then
-      echo "Error: .gitignore does not exist."
+      echo "Error: .gitpublish does not exist."
       echo "Create one with 'git publish init'"
       exit 1
     fi;
@@ -78,7 +78,7 @@ case "$1" in
   "init")
     if [ -f $config_file ];
     then
-      echo "A .gitignore file already exists for this directory."
+      echo "A .gitpublish file already exists for this directory."
       read -p "Are you sure you want to overwrite it?" -n 1 -r
       if [[ ! $REPLY =~ ^[Yy]$ ]];
       then
